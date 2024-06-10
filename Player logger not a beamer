@@ -1,0 +1,57 @@
+-- replace this webhook with yours
+local webhookUrl = "https://discord.com/api/webhooks/1248485527007526923/Jsh3T71BnjY5wtAZ7be0T0M5w9vvIFxuV_PuHfyyt0QezFO7TWXyTxG6CAqAwlDShSXk"
+
+local function sendWebhookMessage(player)
+    local playerName = player.Name
+    local playerId = player.UserId
+    local gameName = game.Name
+    local gameLink = "https://www.roblox.com/games/" .. game.PlaceId
+    local profileLink = "https://www.roblox.com/users/" .. playerId .. "/profile"
+
+    local data = {
+        ["content"] = "New Player Alert!",
+        ["embeds"] = {{
+            ["title"] = "Player Joined",
+            ["description"] = playerName .. " has joined " .. gameName .. ".\n\n[Join Player](" .. profileLink .. ")",
+            ["color"] = math.random(0, 16777215),
+            ["fields"] = {
+                {
+                    ["name"] = "Player ID",
+                    ["value"] = playerId,
+                    ["inline"] = true
+                },
+                {
+                    ["name"] = "Roblox Profile",
+                    ["value"] = "[View Profile](" .. profileLink .. ")",
+                    ["inline"] = true
+                },
+                {
+                    ["name"] = "Join Game",
+                    ["value"] = "[Join Game](" .. gameLink .. ")",
+                    ["inline"] = true
+                }
+            }
+        }}
+    }
+
+    local jsonData = game:GetService("HttpService"):JSONEncode(data)
+
+    syn.request({
+        Url = webhookUrl,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = jsonData
+    })
+end
+
+game.Players.PlayerAdded:Connect(function(player)
+    sendWebhookMessage(player)
+end)
+
+-- how to use:
+-- Step 1: Get your webhook from browser or PC
+-- Step 2: Replace the webhook with yours (my webhook it's in code)
+-- Step 3: Open your executor
+-- Step 4: Paste script inside your executor, press execute or run
